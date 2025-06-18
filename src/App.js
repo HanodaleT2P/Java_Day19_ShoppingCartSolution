@@ -1,23 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import ProductList from "./ProductList";
+import Cart from "./Cart";
+import "./App.css";
 
 function App() {
+  const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState([]);
+
+  useEffect(() => {
+    fetch("/products.json")
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+      .catch((err) => console.error("Error loading products:", err));
+  }, []);
+
+  const addToCart = (product) => {
+    setCart([...cart, product]);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>🛍️ React Shopping App</h1>
+      <ProductList products={products} addToCart={addToCart} />
+      <Cart cart={cart} />
     </div>
   );
 }
